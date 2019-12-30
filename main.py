@@ -3,11 +3,14 @@
  
 # Módulos
 import sys, pygame, random
+
 from pygame.locals import *
- 
-# Constantes
-WIDTH = 640
-HEIGHT = 480
+from Utils import load_image
+from Utils import texto
+from Globals import WIDTH
+from Globals import HEIGHT
+from Evil import Evil
+from Good import Good
  
 # Clases
 # ---------------------------------------------------------------------
@@ -34,210 +37,6 @@ class Player(pygame.sprite.Sprite):
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
 
-class Sword(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = load_image('images/sword.png', True)
-        self.image_mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect()
-        self.rect.top = 0
-        self.rect.centerx = random.randint(0, WIDTH)
-        self.speed = 0.2
-
-    def actualizar(self, time, vidas, sprite, *osprite):
-        self.rect.centery += self.speed * time
-        if self.rect.top >=  HEIGHT:
-            self.rect.top = 0
-            self.rect.centerx = random.randint(0, WIDTH)
-
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.right > WIDTH:
-            self.rect.right = 0
-
-        if collision_detection(self, sprite):
-                vidas -= 1
-                if vidas > 0:
-                    self.rect.top = 0
-                    self.rect.centerx = random.randint(0, WIDTH)
-
-        for elemento in osprite:
-            if type(elemento) == list:
-                for x in elemento:
-                    if x != self:
-                        if collision_detection(self, x):
-                            self.rect.top = 0
-                            self.rect.centerx = random.randint(0, WIDTH)
-            else:
-
-                if collision_detection(self, elemento):
-                    self.rect.top = 0
-                    self.rect.centerx = random.randint(0, WIDTH)
-            
-        return vidas
-
-class Cube(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = load_image('images/cube.png', True)
-        self.image_mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect()
-        self.rect.top = 0
-        self.rect.centerx = random.randint(0, WIDTH)
-        self.speed = 0.2
-
-    def actualizar(self, time, vidas, sprite, *osprite):
-        self.rect.centery += self.speed * time
-        if self.rect.top >=  HEIGHT:
-            self.rect.top = 0
-            self.rect.centerx = random.randint(0, WIDTH)
-
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.right > WIDTH:
-            self.rect.right = 0
-
-        if collision_detection(self, sprite):
-            vidas -= 1
-            if vidas > 0:
-                self.rect.top = 0
-                self.rect.centerx = random.randint(0, WIDTH)
-
-        for elemento in osprite:
-            if type(elemento) == list:
-                for x in elemento:
-                    if x != self:
-                        if collision_detection(self, x):
-                            self.rect.top = 0
-                            self.rect.centerx = random.randint(0, WIDTH)
-            else:
-
-                if collision_detection(self, elemento):
-                    self.rect.top = 0
-                    self.rect.centerx = random.randint(0, WIDTH)
-            
-        return vidas
-
-class Apple(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = load_image('images/apple.png', True)
-        self.image_mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect()
-        self.rect.top = 0
-        self.rect.centerx = random.randint(0, WIDTH)
-        self.speed = 0.2
-
-    def actualizar(self, time, puntos, sprite, *osprite):
-        self.rect.centery += self.speed * time
-        if self.rect.top >=  HEIGHT:
-            self.rect.top = 0
-            self.rect.centerx = random.randint(0, WIDTH)
-
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.right > WIDTH:
-            self.rect.right = 0
-
-        if collision_detection(self, sprite):
-            puntos += 100
-            self.rect.top = 0
-            self.rect.centerx = random.randint(0, WIDTH)
-
-        for elemento in osprite:
-            if type(elemento) == list:
-                for x in elemento:
-                    if collision_detection(self, x):
-                        self.rect.top = 0
-                        self.rect.centerx = random.randint(0, WIDTH)
-            else:
-
-                if collision_detection(self, elemento):
-                    self.rect.top = 0
-                    self.rect.centerx = random.randint(0, WIDTH)
-
-        return puntos
-
-class Orange(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = load_image('images/orange.png', True)
-        self.image_mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect()
-        self.rect.top = 0
-        self.rect.centerx = random.randint(0, WIDTH)
-        self.speed = 0.2
-
-    def actualizar(self, time, puntos, sprite, *osprite):
-        self.rect.centery += self.speed * time
-        if self.rect.top >=  HEIGHT:
-            self.rect.top = 0
-            self.rect.centerx = random.randint(0, WIDTH)
-
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.right > WIDTH:
-            self.rect.right = 0
-
-        if collision_detection(self, sprite):
-            puntos += 50
-            self.rect.top = 0
-            self.rect.centerx = random.randint(0, WIDTH)
-
-        for elemento in osprite:
-            if type(elemento) == list:
-                for x in elemento:
-                    if collision_detection(self, x):
-                        self.rect.top = 0
-                        self.rect.centerx = random.randint(0, WIDTH)
-            else:
-
-                if collision_detection(self, elemento):
-                    self.rect.top = 0
-                    self.rect.centerx = random.randint(0, WIDTH)
-            
-        return puntos
-
-class Watermelon(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = load_image('images/watermelon.png', True)
-        self.image_mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect()
-        self.rect.top = 0
-        self.rect.centerx = random.randint(0, WIDTH)
-        self.speed = 0.2
-
-    def actualizar(self, time, puntos, sprite, *osprite):
-        self.rect.centery += self.speed * time
-        if self.rect.top >=  HEIGHT:
-            self.rect.top = 0
-            self.rect.centerx = random.randint(0, WIDTH)
-
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.right > WIDTH:
-            self.rect.right = 0
-
-        if collision_detection(self, sprite):
-            puntos += 150
-            self.rect.top = 0
-            self.rect.centerx = random.randint(0, WIDTH)
-
-        for elemento in osprite:
-            if type(elemento) == list:
-                for x in elemento:
-                    if collision_detection(self, x):
-                        self.rect.top = 0
-                        self.rect.centerx = random.randint(0, WIDTH)
-            else:
-
-                if collision_detection(self, elemento):
-                    self.rect.top = 0
-                    self.rect.centerx = random.randint(0, WIDTH)
-            
-        return puntos
-
 class Vida(pygame.sprite.Sprite):
     def __init__(self, centerx, centery):
         pygame.sprite.Sprite.__init__(self)
@@ -249,45 +48,27 @@ class Vida(pygame.sprite.Sprite):
 
 # ---------------------------------------------------------------------
  
-# Funciones
-# ---------------------------------------------------------------------
-
-def load_image(filename, transparent=False):
-    try: image= pygame.image.load(filename)
-    except pygame.error as message:
-        raise SystemExit(message)
-    image = image.convert()
-    if transparent:
-        color = image.get_at((0,0))
-        image.set_colorkey(color, RLEACCEL)
-    return image
-
-def collision_detection(sprite1, sprite2):
-    offset_x, offset_y = (sprite2.rect.left - sprite1.rect.left), (sprite2.rect.top - sprite1.rect.top)
-    if (sprite1.image_mask.overlap(sprite2.image_mask, (offset_x, offset_y)) != None):
-        return True
-
-def texto(texto, posx, posy, color=(0, 0, 0), size = 20):
-    fuente = pygame.font.Font('fonts/Unique.ttf', size)
-    salida = pygame.font.Font.render(fuente, texto, 1, color)
-    salida_rect = salida.get_rect()
-    salida_rect.centerx = posx
-    salida_rect.centery = posy
-    return salida, salida_rect
-
-# ---------------------------------------------------------------------
- 
 def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Hier631')
 
+    swordImage = "images/sword.png"
+    cubeImage = "images/cube.png"
+    appleImage = "images/apple.png"
+    orangeImage = "images/orange.png"
+    watermelonImage = "images/watermelon.png"
+    
+    applePoints = 100
+    orangePoints = 50
+    watermelonPoints = 150
+
     background_image = load_image('images/background.png')
     player = Player()
-    sword1= Sword()
-    orange1 = Orange()
-    apple1 = Apple()
-    watermelon1 = Watermelon()
-    cube1 = Cube()
+    sword1= Evil(swordImage)
+    orange1 = Good(orangeImage, orangePoints)
+    apple1 = Good(appleImage, applePoints)
+    watermelon1 = Good(watermelonImage, watermelonPoints)
+    cube1 = Evil(cubeImage)
     vida1 = Vida(15, 10)
     vida2 = Vida(35, 10)
     vida3 = Vida(55, 10)
@@ -312,14 +93,14 @@ def main():
         for index in range(0, 1000):
             if puntos >= count1 and index == count1/1000 and count2 == 0:
                 if len(cube) <= 4:
-                    cube.append(Cube())
+                    cube.append(Evil(cubeImage))
                 count1 += 1000
                 count2 = 1
 
         for index in range(0, 1000):
             if puntos >= count1 and index == count1/1000 and count2 == 1:
                 if len(sword) <=4:
-                    sword.append(Sword())
+                    sword.append(Evil(swordImage))
                 count1 += 1000
                 count2 = 0
 
@@ -338,19 +119,19 @@ def main():
         if vidas > 0:
             player.mover(time, keys)
             for index in range(0, len(cube)):
-                vidas = cube[index].actualizar(time, vidas, player, sword1, orange1, apple1, watermelon1, cube1, cube, sword)
+                vidas = cube[index].Update(time, vidas, player, sword1, orange1, apple1, watermelon1, cube1, cube, sword)
             for index in range(0, len(sword)):
-                vidas = sword[index].actualizar(time, vidas, player, sword1, orange1, apple1, watermelon1, cube1, cube, sword)
-            vidas = sword1.actualizar(time, vidas, player, cube, sword, orange1, apple1, watermelon1, cube1)
-            puntos = orange1.actualizar(time, puntos, player, cube, sword, sword1, apple1, watermelon1, cube1)
-            puntos = apple1.actualizar(time, puntos, player, cube, sword, sword1, orange1, watermelon1, cube1)
-            puntos = watermelon1.actualizar(time, puntos, player, cube, sword, sword1, orange1, apple1, cube1)
-            vidas = cube1.actualizar(time, vidas, player, cube, sword, sword1, orange1, apple1, watermelon1)
+                vidas = sword[index].Update(time, vidas, player, sword1, orange1, apple1, watermelon1, cube1, cube, sword)
+            vidas = sword1.Update(time, vidas, player, cube, sword, orange1, apple1, watermelon1, cube1)
+            puntos = orange1.Update(time, puntos, player, cube, sword, sword1, apple1, watermelon1, cube1)
+            puntos = apple1.Update(time, puntos, player, cube, sword, sword1, orange1, watermelon1, cube1)
+            puntos = watermelon1.Update(time, puntos, player, cube, sword, sword1, orange1, apple1, cube1)
+            vidas = cube1.Update(time, vidas, player, cube, sword, sword1, orange1, apple1, watermelon1)
             
         p_jug, p_jug_rect = texto(str(puntos), WIDTH / 2, 10, size=20)
         game_over, game_over_rect = texto('Game Over', WIDTH / 2, HEIGHT / 2, size=50)
         press_enter, press_enter_rect = texto('Press enter to restart', WIDTH / 2, HEIGHT * 0.60, size=15)
-        level_text, level_text_rect = texto('Level: '+str(int(count1)/1000), WIDTH * 0.75, 10, size = 20)
+        level_text, level_text_rect = texto('Level: '+str(int(count1)//1000), WIDTH * 0.75, 10, size = 20)
         
         screen.blit(background_image, (0, 0))
         screen.blit(sword1.image, sword1.rect)
