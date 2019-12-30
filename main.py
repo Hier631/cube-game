@@ -254,8 +254,8 @@ class Vida(pygame.sprite.Sprite):
 
 def load_image(filename, transparent=False):
     try: image= pygame.image.load(filename)
-    except pygame.error, message:
-        raise SystemExit, message
+    except pygame.error as message:
+        raise SystemExit(message)
     image = image.convert()
     if transparent:
         color = image.get_at((0,0))
