@@ -25,5 +25,5 @@ class Entity(pygame.sprite.Sprite):
     def CheckHorizontalLimits(self):
         if self.rect.left < 0:
             self.rect.left = 0
-        if self.rect.right > WIDTH:
+        elif self.rect.right > WIDTH:
             self.rect.right = 0
