@@ -12,6 +12,18 @@ from Globals import HEIGHT
 from Evil import Evil
 from Good import Good
  
+LEVEL_MAX_POINTS = 1000
+ 
+swordImage = "images/sword.png"
+cubeImage = "images/cube.png"
+appleImage = "images/apple.png"
+orangeImage = "images/orange.png"
+watermelonImage = "images/watermelon.png"
+    
+applePoints = 100
+orangePoints = 50
+watermelonPoints = 150
+ 
 # Clases
 # ---------------------------------------------------------------------
 
@@ -48,19 +60,21 @@ class Vida(pygame.sprite.Sprite):
 
 # ---------------------------------------------------------------------
  
+#Increase the level and add new enemies
+def increaseLevel(points, level, cubeList, swordList):
+    if points >= level * LEVEL_MAX_POINTS:
+        if len(swordList) < 5:
+            if level % 2 == 1:
+                cubeList.append(Evil(cubeImage))
+            else:
+                swordList.append(Evil(swordImage))            
+        level += 1
+        
+    return level
+ 
 def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Hier631')
-
-    swordImage = "images/sword.png"
-    cubeImage = "images/cube.png"
-    appleImage = "images/apple.png"
-    orangeImage = "images/orange.png"
-    watermelonImage = "images/watermelon.png"
-    
-    applePoints = 100
-    orangePoints = 50
-    watermelonPoints = 150
 
     background_image = load_image('images/background.png')
     player = Player()
@@ -80,8 +94,7 @@ def main():
 
     puntos = 0
     vidas = 3
-    count1 = 1000.0
-    count2 = 0
+    level = 1
     
     while True:
         time = clock.tick(60)
@@ -90,31 +103,19 @@ def main():
             if eventos.type == QUIT:
                 sys.exit(0)
 
-        for index in range(0, 1000):
-            if puntos >= count1 and index == count1/1000 and count2 == 0:
-                if len(cube) <= 4:
-                    cube.append(Evil(cubeImage))
-                count1 += 1000
-                count2 = 1
-
-        for index in range(0, 1000):
-            if puntos >= count1 and index == count1/1000 and count2 == 1:
-                if len(sword) <=4:
-                    sword.append(Evil(swordImage))
-                count1 += 1000
-                count2 = 0
+        level = increaseLevel(puntos, level, cube, sword)
 
         for index in range(0, len(cube)):
-            cube[index].speed = count1 / 100000 + 0.2
+            cube[index].speed = level / 100 + 0.2
 
         for index in range(0, len(sword)):
-            sword[index].speed = count1 / 100000 + 0.2
+            sword[index].speed = level / 100 + 0.2
             
-        cube1.speed = count1 / 100000 + 0.2
-        sword1.speed = count1 / 100000 + 0.2
-        orange1.speed = count1 / 100000 + 0.2
-        apple1.speed = count1 / 100000 + 0.2
-        watermelon1.speed = count1 / 100000 + 0.2
+        cube1.speed = level / 100 + 0.2
+        sword1.speed = level / 100 + 0.2
+        orange1.speed = level / 100 + 0.2
+        apple1.speed = level / 100 + 0.2
+        watermelon1.speed = level / 100 + 0.2
 
         if vidas > 0:
             player.mover(time, keys)
@@ -131,7 +132,7 @@ def main():
         p_jug, p_jug_rect = texto(str(puntos), WIDTH / 2, 10, size=20)
         game_over, game_over_rect = texto('Game Over', WIDTH / 2, HEIGHT / 2, size=50)
         press_enter, press_enter_rect = texto('Press enter to restart', WIDTH / 2, HEIGHT * 0.60, size=15)
-        level_text, level_text_rect = texto('Level: '+str(int(count1)//1000), WIDTH * 0.75, 10, size = 20)
+        level_text, level_text_rect = texto('Level: '+str(level), WIDTH * 0.75, 10, size = 20)
         
         screen.blit(background_image, (0, 0))
         screen.blit(sword1.image, sword1.rect)
